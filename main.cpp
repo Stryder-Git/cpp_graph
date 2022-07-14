@@ -1,5 +1,5 @@
 
-# include "src\Tree.h"
+#include "src\Tree.h"
 
 Node& create_tree(){
 	Person Marcel = Person("Marcel", 28);
@@ -55,10 +55,29 @@ Node& create_tree(){
 
 }
 
+void show_nodes(std::vector<Node*> nodes){
+	for (Node* n: nodes){
+		std::cout << n->asstr() << "\n";
+	}
+}
 
 int main(){
 
-	Node root = create_tree();
+	Node& root = create_tree();
+	
+	std::cout << "\n" << root.asstr() << "\n";
+
+	TreeNavigator nav;
+	
+	std::cout << "in main" << "\n";
+
+
+
+
+	std::vector<Node*> found = nav.find_name(root, "Elke");
+
+	show_nodes(found);
+
 
 
 }

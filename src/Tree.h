@@ -34,7 +34,8 @@ class Node{
 			data = d;
 		}
 
-		void set_connections(std::vector<Node*> conns, std::vector<float> csts){
+		void set_connections(std::vector<Node*> conns,
+							 std::vector<float> csts){
 			m_n_connections = conns.size();
 			connections = conns;
 			costs = costs;
@@ -46,8 +47,38 @@ class Node{
 
 		std::string asstr(){
 			std::string string{data.asstr()};
-			return string + ", with: " + std::to_string(connections.size()) + " connections";
+			return string + ", with: " + std::to_string(n_connections) + " connections";
 		}
 };
 
+
+class TreeNavigator{
+	private:
+		void _find_name(std::vector<Node*>& found, 
+						const Node* node,
+						const std::string& name){
+
+			for (Node* conn: node->connections){
+				std::cout << "checking name " << conn->data.name << "\n";
+
+				if (conn->data.name == name){
+					found.push_back(conn);
+				}
+				_find_name(found, conn, name);
+			}
+		}
+
+	public:
+
+		std::vector<Node*> find_name(Node& root, std::string name){
+
+			std::cout << "searching " << "\n";
+
+			std::cout << root.data.name << "\n";
+
+			std::vector<Node*> found;
+			_find_name(found, &root, name);
+			return found;
+		}
+};
 
