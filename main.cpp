@@ -1,7 +1,16 @@
 
 #include "src\Tree.h"
 
-Node& create_tree(){
+#include <vector>
+#include <iostream>
+
+void show_nodes(std::vector<Node*> nodes) {
+	for (Node* n : nodes) {
+		std::cout << n->asstr() << "\n";
+	}
+}
+
+Node* create_tree(){
 	Person Marcel = Person("Marcel", 28);
 	Node n_Marcel = Node(Marcel);
 
@@ -45,40 +54,36 @@ Node& create_tree(){
 	n_Jason.set_connections(conns_Jason);
 	n_Elke.set_connections(conns_Elke);
 	
-	for (Node* n : all_nodes){
-		std::cout << n->asstr() << "\n";
-	}
+	show_nodes(all_nodes);
 
+	Node* root = &n_Marcel;
 
-	Node& root = n_Marcel;
+	//std::cout << "in create_tree" << "\n";
+	std::cout<< n_Marcel.data->name << "\n";
 	return root;
-
-}
-
-void show_nodes(std::vector<Node*> nodes){
-	for (Node* n: nodes){
-		std::cout << n->asstr() << "\n";
-	}
 }
 
 int main(){
 
-	Node& root = create_tree();
-	
-	std::cout << "\n" << root.asstr() << "\n";
+	Node* root = create_tree();
+	std::cout << root->asstr() << "\n";
 
 	TreeNavigator nav;
-	
-	std::cout << "in main" << "\n";
 
+	std::cout << "in main " << nav.var << "\n";
 
+	nav.show_names(root);
 
+	//std::cout<< "end";
+
+	std::cout << (root->data->name).length() << "\n";
+
+	std::cout << "again" << "\n"; 
 
 	std::vector<Node*> found = nav.find_name(root, "Elke");
 
 	show_nodes(found);
 
-
-
+	delete root
 }
 
