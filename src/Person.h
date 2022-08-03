@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <fstream>
 
+
 class Person {
 public:
 	std::string name;
@@ -18,25 +19,15 @@ public:
 };
 
 
-std::unordered_map<int, Person*>* get_people(std::string path = "data\\people.txt") {
-
-	std::ifstream file;
-	file.open("data\\people.txt");
-	if (!file) {
-		std::cerr << "Cannot open file " << path << "\n\n";
-		exit(1);
-	}
-	else {
-		std::cout << "opened file " << path << "\n\n";
-	}
+std::unordered_map<int, Person*>* get_people(std::ifstream* file) {
 
 	std::unordered_map<int, Person*>* people = new std::unordered_map<int, Person*>;
 	std::string line;
 	int nline = 0;
-	while (!file.eof()) {
+	while (!file->eof()) {
 		nline += 1;
 
-		std::getline(file, line);
+		std::getline(*file, line);
 		int length = line.length();
 		if (length == 0) { continue; }
 
@@ -78,7 +69,7 @@ std::unordered_map<int, Person*>* get_people(std::string path = "data\\people.tx
 		(*people)[id] = p;
 	}
 
-	file.close();
+	file->close();
 	return people;
 }
 #endif // PERSON_H

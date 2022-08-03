@@ -1,6 +1,7 @@
 
 #include "src\Person.h"
 #include "src\Tree.h"
+#include "src\utils.h"
 
 #include <vector>
 #include <iostream>
@@ -17,7 +18,7 @@ void show_nodes(const std::vector<Node*>* nodes) {
 
 int main() {
 
-	std::unordered_map<int, Person*>* data = get_people();
+	std::unordered_map<int, Person*>* data = get_people(get_file("data\\people.txt"));
 
 
 

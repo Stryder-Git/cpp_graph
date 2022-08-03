@@ -1,5 +1,7 @@
 #include <vector>
 #include <iostream>
+#include <unordered_map>
+#include <fstream>
 #include "Person.h"
 
 class Node{
@@ -30,6 +32,15 @@ class Node{
 			return string + ", with: " + std::to_string(n_connections) + " connections";
 		}
 };
+
+//Node* build_tree(std::unordered_map<int, Person*>* people, std::string path) {
+//
+//
+//
+//
+//
+//
+//}
 
 
 class TreeNavigator{
