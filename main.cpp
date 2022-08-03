@@ -22,6 +22,8 @@ int main() {
 
 
 
+
+	delete_map(data);
 }
 
 

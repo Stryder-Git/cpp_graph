@@ -70,6 +70,7 @@ std::unordered_map<int, Person*>* get_people(std::ifstream* file) {
 	}
 
 	file->close();
+	delete file;
 	return people;
 }
 #endif // PERSON_H
