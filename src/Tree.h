@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include "Person.h"
 
 class Node{
 	private:
@@ -30,7 +31,7 @@ class Node{
 		}
 };
 
-/*
+
 class TreeNavigator{
 	private:
 		void _find_name(std::vector<Node*>& found, 
@@ -60,4 +61,3 @@ class TreeNavigator{
 			return found;
 		}
 };
-*/

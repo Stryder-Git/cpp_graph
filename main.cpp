@@ -6,11 +6,11 @@
 #include <iostream>
 
 
-//void show_nodes(const std::vector<Node*>* nodes) {
-//	for (Node* n : *nodes) {
-//		std::cout << n->asstr() << "\n";
-//	}
-//}
+void show_nodes(const std::vector<Node*>* nodes) {
+	for (Node* n : *nodes) {
+		std::cout << n->asstr() << "\n";
+	}
+}
 
 
 
