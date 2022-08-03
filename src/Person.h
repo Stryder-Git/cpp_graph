@@ -32,8 +32,13 @@ std::unordered_map<int, Person*>* get_people(std::string path = "data\\people.tx
 
 	std::unordered_map<int, Person*>* people = new std::unordered_map<int, Person*>;
 	std::string line;
+	int nline = 0;
 	while (!file.eof()) {
+		nline += 1;
+
 		std::getline(file, line);
+		int length = line.length();
+		if (length == 0) { continue; }
 
 		int id = 0;
 		std::string name = "";
@@ -41,7 +46,7 @@ std::unordered_map<int, Person*>* get_people(std::string path = "data\\people.tx
 
 		int field = 0;
 		char c;
-		for (int i = 0; i < line.length(); i++) {
+		for (int i = 0; i < length; i++) {
 			c = line[i];
 
 			if (c == ',') {
@@ -63,6 +68,11 @@ std::unordered_map<int, Person*>* get_people(std::string path = "data\\people.tx
 			}
 		}
 
+		if (id == 0 || name == "" || age == 0) {
+			std::cout << "line number " << nline << " is invalid\n\n";
+			continue;
+		}
+		
 		Person* p = new Person(name, age);
 		std::cout << "found " << id << ": " << p->asstr() << "\n\n";
 		(*people)[id] = p;
@@ -71,4 +81,4 @@ std::unordered_map<int, Person*>* get_people(std::string path = "data\\people.tx
 	file.close();
 	return people;
 }
-#endif // !1
+#endif // PERSON_H
