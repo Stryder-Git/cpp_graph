@@ -20,6 +20,9 @@ int main() {
 
 	std::unordered_map<int, Person*>* data = get_people(get_file("data\\people.txt"));
 
+	std::cout << "\n\nBuilding Tree:\n\n";
+
+	Node* root = build_tree(data, get_file("data\\people\\one.txt"));
 
 
 

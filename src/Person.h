@@ -26,7 +26,6 @@ std::unordered_map<int, Person*>* get_people(std::ifstream* file) {
 	int nline = 0;
 	while (!file->eof()) {
 		nline += 1;
-
 		std::getline(*file, line);
 		int length = line.length();
 		if (length == 0) { continue; }

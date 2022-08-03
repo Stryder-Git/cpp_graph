@@ -22,7 +22,7 @@ void delete_map(std::unordered_map<int, T*>* m) {
 	for (auto& t : *m) {
 		delete t.second;
 	}
-	std::cout << "\ndeleteing data" << "\n";
+	std::cout << "\ndeleting data" << "\n";
 	delete m;
 }
 
