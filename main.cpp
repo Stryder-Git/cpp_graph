@@ -1,15 +1,31 @@
 
+#include "src\Person.h"
 #include "src\Tree.h"
 
 #include <vector>
 #include <iostream>
 
-void show_nodes(const std::vector<Node*>* nodes) {
-	for (Node* n : *nodes) {
-		std::cout << n->asstr() << "\n";
-	}
+
+//void show_nodes(const std::vector<Node*>* nodes) {
+//	for (Node* n : *nodes) {
+//		std::cout << n->asstr() << "\n";
+//	}
+//}
+
+
+
+
+int main() {
+
+	std::unordered_map<int, Person*>* data = get_people();
+
+
+
 }
 
+
+
+/*
 Node* create_tree(){
 	Person* Marcel = new Person("Marcel", 28);
 	Node* n_Marcel = new Node(Marcel);
@@ -79,5 +95,5 @@ int main(){
 	show_nodes(&found);
 
 	delete root;
-}
+}*/
 
