@@ -24,9 +24,16 @@ int main() {
 
 	Node* root = build_tree(data, get_file("data\\people\\one.txt"));
 
+	std::cout << "\nroot is:\n" << root->asstr()<< "\n";
 
+	TreeNavigator nav;
 
+	std::vector<Node*> found = nav.find_name(root, "Tom");
+
+	show_nodes(&found);
+	
 	delete_map(data);
+	//nav.delete_tree(root);
 }
 
 

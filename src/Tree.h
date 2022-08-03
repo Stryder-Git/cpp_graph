@@ -34,9 +34,9 @@ class Node{
 		}
 };
 
-std::map<int, std::vector<int>> _get_conns(std::ifstream* file) {
+std::vector<std::pair<int, std::vector<int>>> _get_conns(std::ifstream* file) {
 	
-	std::map<int, std::vector<int>> conns;
+	std::vector<std::pair<int, std::vector<int>>> conns;
 
 	std::string line;
 	std::vector<int> conn;
@@ -76,42 +76,51 @@ std::map<int, std::vector<int>> _get_conns(std::ifstream* file) {
 		}
 
 		std::cout << "found " << conn.size() << " connections for " << id << "\n";
-		conns[id] = conn;
+		std::pair<int, std::vector<int>> pair(id, conn);
+		conns.push_back(pair);
 	}
+	file->close();
 	return conns;
 
 }
 
 Node* build_tree(std::unordered_map<int, Person*>* people, std::ifstream* file) {
 
-	std::map<int, std::vector<int>> conns = _get_conns(file);
+	std::vector<std::pair<int, std::vector<int>>> conns = _get_conns(file);
+
 
 	std::unordered_map<int, Node*> all_nodes;
-
+	// this just creates actual nodes from people
 	for (auto& d : *people) {
 		Node* n = new Node(d.second);
 		all_nodes[d.first] = n;
+	}
+
+	Node* root;
+	std::vector<Node*> cnodes;
+	bool found = false;
+	// for each pair of id-conns
+	for (auto& d : conns) {
+		if (!found) {
+			root = all_nodes[d.first];
+			found = true;
+		}
+		
+		// create array of Node* that are the children
+		cnodes.clear();
+		for (int cid : d.second) {
+			cnodes.push_back(all_nodes[cid]);
+		}
+		
+		// set connections of node
+		all_nodes[d.first]->set_connections(cnodes);
 	}
 
 	for (auto& d : all_nodes) {
 		std::cout << "created Node for " << d.first << ": " << d.second->asstr() << "\n";
 	}
 
-	/*
-	for each person,
-		create a node, and set_connections
-	*/
-	
-	Node* n;
-	return n;
-
-
-
-
-
-
-
-
+	return root;
 
 	}
 
@@ -135,8 +144,6 @@ class TreeNavigator{
 
 	public:
 
-		int var = 1;
-
 		std::vector<Node*> find_name(const Node* root, const std::string& name){
 
 			std::vector<Node*> found;
@@ -145,4 +152,5 @@ class TreeNavigator{
 
 			return found;
 		}
+
 };
