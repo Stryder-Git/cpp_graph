@@ -1,7 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <unordered_map>
-#include <map>
+#include <deque>
 #include <fstream>
 #include "Person.h"
 
@@ -104,14 +104,12 @@ Node* build_tree(std::unordered_map<int, Person*>* people, std::ifstream* file) 
 		if (!found) {
 			root = all_nodes[d.first];
 			found = true;
-		}
-		
+		}		
 		// create array of Node* that are the children
 		cnodes.clear();
 		for (int cid : d.second) {
 			cnodes.push_back(all_nodes[cid]);
 		}
-		
 		// set connections of node
 		all_nodes[d.first]->set_connections(cnodes);
 	}
@@ -125,9 +123,9 @@ Node* build_tree(std::unordered_map<int, Person*>* people, std::ifstream* file) 
 	}
 
 
-
-class TreeNavigator{
+class DepthFirstSearch{
 	private:
+
 		void _find_name(std::vector<Node*>& found, 
 						const Node* node,
 						const std::string& name){
@@ -143,14 +141,43 @@ class TreeNavigator{
 		}
 
 	public:
-
-		std::vector<Node*> find_name(const Node* root, const std::string& name){
+		std::vector<Node*> find_name(Node* root, const std::string& name){
 
 			std::vector<Node*> found;
+			if (root->data->name == name) {
+				found.push_back(root);
+			}
 
 			_find_name(found, root, name);
-
 			return found;
 		}
 
+};
+
+
+class BreadthFirstSearch {
+
+private:
+	void _add(std::deque<Node*>& visit, const std::vector<Node*>& conns) {
+		for (Node* n : conns) {visit.push_back(n);}
+	}
+
+public:
+	std::vector<Node*> find_name(Node* root, const std::string& name) {
+		std::vector<Node*> found;
+		std::deque<Node*> visit{root};
+
+		Node* now;
+		while (visit.size() != 0) {
+			now = visit.front(); visit.pop_front();
+
+			std::cout << "checking " << now->data->name << "\n";
+			if (now->data->name == name) { found.push_back(now); }
+
+			_add(visit, now->connections);
+		}
+
+		return found;
+
+	}
 };

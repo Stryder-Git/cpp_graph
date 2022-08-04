@@ -26,10 +26,16 @@ int main() {
 
 	std::cout << "\nroot is:\n" << root->asstr()<< "\n";
 
-	TreeNavigator nav;
 
-	std::vector<Node*> found = nav.find_name(root, "Tom");
+	BreadthFirstSearch bfs; 
 
+	std::vector<Node*> found = bfs.find_name(root, "Tom");
+
+
+	//DepthFirstSearch dfs;
+	//std::vector<Node*> found = dfs.find_name(root, "Tom");
+
+	std::cout << "\nFound " << found.size() << ":\n";
 	show_nodes(&found);
 	
 	delete_map(data);
