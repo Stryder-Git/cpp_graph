@@ -1,0 +1,14 @@
+1, Tom, 28
+2, Mark, 30
+3, Jane, 29
+4, Lara, 35
+5,Marcus,  37
+6,  Caroline M  ,    48
+    
+7, Tom X, 23
+8,        Lisa, 21
+,     ,
+9, Alice Jackson, 34
+
+10, Nick, 46
+
