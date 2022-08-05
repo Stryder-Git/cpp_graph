@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <fstream>
+#include <vector>
 
 class Logger {
 	/*
@@ -30,18 +31,97 @@ public:
 Logger logger(0);
 
 
-std::ifstream* get_file(std::string path) {
-	std::ifstream* file = new std::ifstream(path);
-	
-	if (!(*file)) {
-		logger.log(3, "Cannot open file " + path);
-		exit(1);
+
+
+class CSVReader {
+private:
+	std::ifstream* _get_file(std::string path) {
+		std::ifstream* file = new std::ifstream(path);
+
+		if (!(*file)) {
+			logger.log(3, "Cannot open file " + path);
+			exit(1);
+		}
+		else {
+			logger.log(2, "opened file " + path);
+		}
+		return file;
 	}
-	else {
-		logger.log(2, "opened file " + path);
+
+	std::string _clean_entry(std::string s) {
+		int j = s.length() - 1;
+		int i = 0;
+		for (; i <= j; i++) {
+			if (s[i] != ' ') { break; }
+		}
+		for (; j >= 0; j--) {
+			if (s[j] != ' ') { j++; break; }
+		}
+		return s.substr(i, j - i);
 	}
-	return file;
-}
+
+	std::vector<std::string> _parse_line(std::string line) {
+		std::vector<std::string> parsed;
+		int length = line.length();
+		int i = 0;
+		for (int j = 0; j < length; j++) {
+			if (line[j] == ',') {
+				parsed.push_back(_clean_entry(line.substr(i, j - i)));
+				i = j + 1;
+			}
+		}
+		parsed.push_back(_clean_entry(line.substr(i)));
+		return parsed;
+
+	}
+
+public:
+	std::string path;
+	std::ifstream* file;
+	bool eof = false;
+	int nline = 0;
+
+	CSVReader(std::string p){
+		path = p;
+		file = _get_file(p);
+	}
+
+	std::vector<std::string> next() {
+		std::string line;
+		std::vector<std::string> fields;
+		bool notvalid = line.length() == 0;
+
+		while (notvalid && !file->eof()) {
+			std::getline(*file, line);	
+			fields = _parse_line(line);
+
+			notvalid = false;
+			for (auto& s : fields) {
+				if (s.size() == 0){
+					notvalid = true; break;
+				}
+			}
+			nline++;
+		}
+		
+		eof = file->eof();
+		if (eof) { 
+			logger.log(0, "closing file " + path);
+			file->close(); delete file;
+		}
+		return fields;
+	}
+
+
+
+};
+
+
+
+
+
+
+
 
 template <class T>
 void delete_map(std::unordered_map<int, T*>* m) {

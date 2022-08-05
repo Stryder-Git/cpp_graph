@@ -38,91 +38,58 @@ class Node{
 		}
 };
 
-std::vector<std::pair<int, std::vector<int>>> _get_conns(std::ifstream* file) {
+std::vector<std::pair<int, std::vector<int>>> _get_conns(std::string path) {
 	
+	CSVReader data(path);
 	std::vector<std::pair<int, std::vector<int>>> conns;
-
-	std::string line;
+	std::vector<std::string> fields;
 	std::vector<int> conn;
-	int nline = 0;
-	while (!file->eof()) {
-		nline += 1;
-		std::getline(*file, line);
-		int length = line.length();
-		if (length == 0) { continue; }
-		conn.clear();
 
-		int id = 0;
-		int cid = 0;
-		char c;
-		int field = 0;
-		for (int i = 0; i < length; i++) {
-			c = line[i];
-
-			if (c == ',') {
-				field += 1;
-				continue;
-			}
-			if (c == ' ') { continue; }
-
-			if (field == 0) {
-				id = c - 48;
-			}
-			else {
-				cid = c - 48;
-				conn.push_back(cid);
-			}
-		}
-
-		if (id == 0) {
-			logger.log(0, "line number " + std::to_string(nline) + " is invalid");
-			continue;
+	while (!data.eof) {
+		fields = data.next();
+		if (data.eof) { break; }
+		int id = std::stoi(fields[0]);
+		int fsize = fields.size();
+		for (int i = 1; i < fsize; i++) {
+			conn.push_back(std::stoi(fields[i]));
 		}
 
 		logger.log(0, "found " + std::to_string(conn.size()) + " connections for " + std::to_string(id));
 		std::pair<int, std::vector<int>> pair(id, conn);
 		conns.push_back(pair);
+		conn.clear();
 	}
-	file->close();
 	return conns;
 
 }
 
-Node* build_tree(std::unordered_map<int, Person*>* people, std::ifstream* file) {
+Node* build_tree(std::unordered_map<int, Person*>* people, std::string path) {
 
-	std::vector<std::pair<int, std::vector<int>>> conns = _get_conns(file);
-
-
+	std::vector<std::pair<int, std::vector<int>>> conns = _get_conns(path);
 	std::unordered_map<int, Node*> all_nodes;
-	// this just creates actual nodes from people
+	// this just creates actual nodes from people 
+	// simpler to do it right now, since not all nodes may be in conns
 	for (auto& d : *people) {
-		Node* n = new Node(d.second);
-		all_nodes[d.first] = n;
+		all_nodes[d.first] = new Node(d.second);
 	}
-
-	Node* root;
 	std::vector<Node*> cnodes;
-	bool found = false;
 	// for each pair of id-conns
 	for (auto& d : conns) {
-		if (!found) {
-			root = all_nodes[d.first];
-			found = true;
-		}		
 		// create array of Node* that are the children
-		cnodes.clear();
 		for (int cid : d.second) {
 			cnodes.push_back(all_nodes[cid]);
 		}
 		// set connections of node
 		all_nodes[d.first]->set_connections(cnodes);
+		cnodes.clear();
 	}
 
-	for (auto& d : all_nodes) {
-		logger.log(0, "created Node for " + std::to_string(d.first) + ": " + d.second->asstr());
+	if (logger.level == 0) {
+		for (auto& d : all_nodes) {
+			logger.log(0, "created Node for " + std::to_string(d.first) + ": " + d.second->asstr());
+		}
 	}
-
-	return root;
+	return all_nodes[conns[0].first];
 
 	}
 

@@ -51,9 +51,9 @@ int main(int n, char* argv[]) {
 
 	/// BUILD GRAPH
 	logger.log(4, "reading data");
-	std::unordered_map<int, Person*>* data = get_people(get_file("data\\people.txt"));
+	std::unordered_map<int, Person*>* data = get_people("data\\people.txt");
 	logger.log(4, "building tree:");
-	Node* root = build_tree(data, get_file("data\\people\\one.txt"));
+	Node* root = build_tree(data, "data\\people\\one.txt");
 	logger.log(2, "root is:" + root->asstr());
 
 
