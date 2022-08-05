@@ -30,7 +30,6 @@ std::unordered_map<int, Person*>* get_people(std::string path) {
 
 	while (!data.eof) {
 		fields = data.next();
-		if (data.eof) { break; }
 		int id = std::stoi(fields[0]);
 		std::string name = fields[1];
 		int age = std::stoi(fields[2]);

@@ -75,44 +75,52 @@ private:
 
 	}
 
-public:
-	std::string path;
-	std::ifstream* file;
-	bool eof = false;
-	int nline = 0;
-
-	CSVReader(std::string p){
-		path = p;
-		file = _get_file(p);
-	}
-
-	std::vector<std::string> next() {
+	std::vector<std::string> _next() {
 		std::string line;
 		std::vector<std::string> fields;
 		bool notvalid = line.length() == 0;
 
 		while (notvalid && !file->eof()) {
-			std::getline(*file, line);	
+			std::getline(*file, line);
 			fields = _parse_line(line);
 
 			notvalid = false;
 			for (auto& s : fields) {
-				if (s.size() == 0){
+				if (s.size() == 0) {
 					notvalid = true; break;
 				}
 			}
 			nline++;
 		}
-		
+
 		eof = file->eof();
-		if (eof) { 
+		if (eof) {
 			logger.log(0, "closing file " + path);
 			file->close(); delete file;
 		}
 		return fields;
 	}
 
+public:
+	std::string path;
+	std::ifstream* file;
+	std::vector<std::string> next_line;
+	bool eof = false;
+	int nline = 0;
 
+	CSVReader(std::string p){
+		path = p;
+		file = _get_file(p);
+		next_line = _next();
+	}
+
+	std::vector<std::string> next() {
+		std::vector<std::string> l = next_line;
+		next_line = _next();
+		return l;
+
+	}
+	
 
 };
 

@@ -47,7 +47,6 @@ std::vector<std::pair<int, std::vector<int>>> _get_conns(std::string path) {
 
 	while (!data.eof) {
 		fields = data.next();
-		if (data.eof) { break; }
 		int id = std::stoi(fields[0]);
 		int fsize = fields.size();
 		for (int i = 1; i < fsize; i++) {
