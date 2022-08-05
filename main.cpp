@@ -64,6 +64,7 @@ int main(int n, char* argv[]) {
 		for (auto& id_p : *data) {
 			std::cout << "id: " << id_p.first << " " << id_p.second->asstr() << "\n";
 		}
+		delete_map(data);
 		return 0;
 	}
 
