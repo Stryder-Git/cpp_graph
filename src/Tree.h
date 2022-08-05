@@ -75,11 +75,11 @@ std::vector<std::pair<int, std::vector<int>>> _get_conns(std::ifstream* file) {
 		}
 
 		if (id == 0) {
-			std::cout << "line number " << nline << " is invalid\n\n";
+			logger.log(0, "line number " + std::to_string(nline) + " is invalid");
 			continue;
 		}
 
-		std::cout << "found " << conn.size() << " connections for " << id << "\n";
+		logger.log(0, "found " + std::to_string(conn.size()) + " connections for " + std::to_string(id));
 		std::pair<int, std::vector<int>> pair(id, conn);
 		conns.push_back(pair);
 	}
@@ -119,7 +119,7 @@ Node* build_tree(std::unordered_map<int, Person*>* people, std::ifstream* file) 
 	}
 
 	for (auto& d : all_nodes) {
-		std::cout << "created Node for " << d.first << ": " << d.second->asstr() << "\n";
+		logger.log(0, "created Node for " + std::to_string(d.first) + ": " + d.second->asstr());
 	}
 
 	return root;
@@ -134,7 +134,7 @@ class DepthFirstSearch{
 						Node* node,
 						const std::string& name){
 			
-			std::cout << "checking name " << node->data->name << "\n";
+			logger.log(1, "checking name " + node->data->name);
 			if (node->data->name == name) {
 				found.push_back(node);
 			}
@@ -171,10 +171,10 @@ public:
 		while (visit.size() != 0) {
 			now = visit.front(); visit.pop_front();
 
-			std::cout << "checking " << now->data->name << "\n";
+			logger.log(1, "checking " + now->data->name);
 			if (now->data->name == name) { found.push_back(now); }
 
-			_add(visit, now->connections);
+			for (Node* n : now->connections) { visit.push_back(n); }
 		}
 
 		return found;

@@ -15,7 +15,7 @@ void show_nodes(const std::vector<Node*>* nodes) {
 
 
 int main(int n, char* argv[]) {
-
+	std::cout << "\n";
 	/// PARSE ARGS
 	std::string explanation = "Currently, You can only pass a name to be searched by passing : "
 		"'--bfs=NAME' or '--dfs=NAME' for doing a breadth-first or depth-first search for NAME. "
@@ -26,8 +26,9 @@ int main(int n, char* argv[]) {
 
 	std::string action;
 	std::string target;
+	logger.level = 2;
 
-	if (n > 2) { 
+	if (n > 3) { 
 		throw too_many;
 	}
 	else if (n < 2) {
@@ -35,6 +36,10 @@ int main(int n, char* argv[]) {
 		exit(0);
 	}
 	else{
+		// possibly setting loglevel
+		if (n == 3) { logger.level = std::stoi(argv[2]); }
+
+		// extract how to search and what name to search for
 		action = argv[1];
 		target = action.substr(6);
 		action = action.substr(0, 6);
@@ -44,17 +49,18 @@ int main(int n, char* argv[]) {
 		}		
 	}
 
-
 	/// BUILD GRAPH
+	logger.log(4, "reading data");
 	std::unordered_map<int, Person*>* data = get_people(get_file("data\\people.txt"));
-	std::cout << "\n\nBuilding Tree:\n\n";
+	logger.log(4, "building tree:");
 	Node* root = build_tree(data, get_file("data\\people\\one.txt"));
-	std::cout << "\nroot is:\n" << root->asstr()<< "\n\n";
+	logger.log(2, "root is:" + root->asstr());
 
 
 	// SHOW
+	std::string divider = "\n----------------------------------------------------------\n";
 	if (action == "--show") {
-		std::cout << "Available Data: \n\n";
+		std::cout << divider + "\nAvailable Data: \n\n";
 		for (auto& id_p : *data) {
 			std::cout << "id: " << id_p.first << " " << id_p.second->asstr() << "\n";
 		}
@@ -62,10 +68,8 @@ int main(int n, char* argv[]) {
 	}
 
 
-
-	
 	// SEARCH
-	std::cout << "\n\nsearching for " + target << " :\n\n";
+	logger.log(4, "Searching for " + target + " :");
 	std::vector<Node*> found;
 	if (action == "--bfs=") {
 		BreadthFirstSearch searcher;
@@ -77,7 +81,7 @@ int main(int n, char* argv[]) {
 	}
 
 	
-	std::cout << "\nFound " << found.size() << ":\n";
+	std::cout << divider + "\nFound " + std::to_string(found.size()) + ":\n\n";
 	show_nodes(&found);
 	
 	delete_map(data);

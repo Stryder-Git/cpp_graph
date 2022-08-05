@@ -5,6 +5,8 @@
 #include <iostream>
 #include <unordered_map>
 #include <fstream>
+#include <string>
+
 #include "utils.h"
 
 
@@ -60,12 +62,12 @@ std::unordered_map<int, Person*>* get_people(std::ifstream* file) {
 		}
 
 		if (id == 0 || name == "" || age == 0) {
-			std::cout << "line number " << nline << " is invalid\n\n";
+			logger.log(0, "line number " + std::to_string(nline) + " is invalid");
 			continue;
 		}
 		
 		Person* p = new Person(name, age);
-		std::cout << "found " << id << ": " << p->asstr() << "\n\n";
+		logger.log(0, "found " + std::to_string(id) + ": " + p->asstr());
 		(*people)[id] = p;
 	}
 
