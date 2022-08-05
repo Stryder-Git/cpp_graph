@@ -1,9 +1,13 @@
+#ifndef TREE_H
+#define TREE_H
+
 #include <vector>
 #include <iostream>
 #include <unordered_map>
 #include <deque>
 #include <fstream>
 #include "Person.h"
+#include "utils.h"
 
 class Node{
 	private:
@@ -127,15 +131,15 @@ class DepthFirstSearch{
 	private:
 
 		void _find_name(std::vector<Node*>& found, 
-						const Node* node,
+						Node* node,
 						const std::string& name){
+			
+			std::cout << "checking name " << node->data->name << "\n";
+			if (node->data->name == name) {
+				found.push_back(node);
+			}
 
 			for (Node* conn: node->connections){
-				std::cout << "checking name " << conn->data->name << "\n";
-
-				if (conn->data->name == name){
-					found.push_back(conn);
-				}
 				_find_name(found, conn, name);
 			}
 		}
@@ -144,10 +148,6 @@ class DepthFirstSearch{
 		std::vector<Node*> find_name(Node* root, const std::string& name){
 
 			std::vector<Node*> found;
-			if (root->data->name == name) {
-				found.push_back(root);
-			}
-
 			_find_name(found, root, name);
 			return found;
 		}
@@ -181,3 +181,5 @@ public:
 
 	}
 };
+
+#endif // TREE_H
