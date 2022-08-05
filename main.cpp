@@ -14,105 +14,73 @@ void show_nodes(const std::vector<Node*>* nodes) {
 }
 
 
+int main(int n, char* argv[]) {
+
+	/// PARSE ARGS
+	std::string explanation = "Currently, You can only pass a name to be searched by passing : "
+		"'--bfs=NAME' or '--dfs=NAME' for doing a breadth-first or depth-first search for NAME. "
+		"Alternatively, you can pass --show and it will show you the data.\n";
+
+	std::invalid_argument too_many("\n\nToo many arguments\n\n" + explanation);
+	std::invalid_argument incorrect("\n\nInvalid argument\n\n" + explanation);
+
+	std::string action;
+	std::string target;
+
+	if (n > 2) { 
+		throw too_many;
+	}
+	else if (n < 2) {
+		std::cout << "No args passed\n";
+		exit(0);
+	}
+	else{
+		action = argv[1];
+		target = action.substr(6);
+		action = action.substr(0, 6);
+		if (action != "--show" && action != "--bfs=" && action != "--dfs=") {
+			//std::cout << "received " 
+			throw incorrect;
+		}		
+	}
 
 
-int main() {
-
+	/// BUILD GRAPH
 	std::unordered_map<int, Person*>* data = get_people(get_file("data\\people.txt"));
-
 	std::cout << "\n\nBuilding Tree:\n\n";
-
 	Node* root = build_tree(data, get_file("data\\people\\one.txt"));
-
-	std::cout << "\nroot is:\n" << root->asstr()<< "\n";
-
-
-	BreadthFirstSearch bfs; 
-
-	std::vector<Node*> found = bfs.find_name(root, "Tom");
+	std::cout << "\nroot is:\n" << root->asstr()<< "\n\n";
 
 
-	//DepthFirstSearch dfs;
-	//std::vector<Node*> found = dfs.find_name(root, "Tom");
+	// SHOW
+	if (action == "--show") {
+		std::cout << "Available Data: \n\n";
+		for (auto& id_p : *data) {
+			std::cout << "id: " << id_p.first << " " << id_p.second->asstr() << "\n";
+		}
+		return 0;
+	}
 
+
+
+	
+	// SEARCH
+	std::cout << "\n\nsearching for " + target << " :\n\n";
+	std::vector<Node*> found;
+	if (action == "--bfs=") {
+		BreadthFirstSearch searcher;
+		found = searcher.find_name(root, target);
+	}
+	else {
+		DepthFirstSearch searcher;
+		found = searcher.find_name(root, target);
+	}
+
+	
 	std::cout << "\nFound " << found.size() << ":\n";
 	show_nodes(&found);
 	
 	delete_map(data);
 	//nav.delete_tree(root);
 }
-
-
-
-/*
-Node* create_tree(){
-	Person* Marcel = new Person("Marcel", 28);
-	Node* n_Marcel = new Node(Marcel);
-
-	Person* Angela = new Person("Angela", 26);
-	Node* n_Angela = new Node(Angela);
-
-	Person* Peter = new Person("Peter", 62);
-	Node* n_Peter = new Node(Peter);
-
-	Person* Romy = new Person("Romy", 63);
-	Node* n_Romy = new Node(Romy);
-
-	Person* Elke = new Person("Elke", 60);
-	Node* n_Elke = new Node(Elke);
-
-	Person* Amy = new Person("Amy", 55);
-	Node* n_Amy = new Node(Amy);
-
-	Person* Jason = new Person("Jason", 58);
-	Node* n_Jason = new Node(Jason);
-
-
-	std::vector<Node*>* all_nodes = new std::vector<Node*>{
-		n_Marcel,n_Angela,n_Peter,n_Romy,n_Elke,n_Amy,n_Jason};
-
-	// connections:
-	std::vector<Node*> conns_Marcel{n_Angela, n_Peter, n_Romy};
-	std::vector<Node*> conns_Angela{n_Amy, n_Jason};
-	std::vector<Node*> conns_Peter{n_Elke};
-	std::vector<Node*> conns_Romy{};
-	std::vector<Node*> conns_Amy{};
-	std::vector<Node*> conns_Jason{};
-	std::vector<Node*> conns_Elke{};
-
-	
-	n_Marcel->set_connections(conns_Marcel);
-	n_Angela->set_connections(conns_Angela);
-	n_Peter->set_connections(conns_Peter);
-	n_Romy->set_connections(conns_Romy);
-	n_Amy->set_connections(conns_Amy);
-	n_Jason->set_connections(conns_Jason);
-	n_Elke->set_connections(conns_Elke);
-	
-	show_nodes(all_nodes);
-	delete all_nodes;
-
-	//std::cout << "in create_tree" << "\n";
-	std::cout<< n_Marcel->data->name << "\n";
-	return n_Marcel;
-}
-
-int main(){
-
-	Node* root = create_tree();
-	std::cout << root->asstr() << "\n";
-
-	TreeNavigator nav;
-
-
-	std::cout << "root is " << root->data->name << "\n\n" << "now searching" << "\n\n";
-
-	std::vector<Node*> found = nav.find_name(root, "Elke");
-
-	std::cout << "\nfound:\n\n" << std::endl;
-
-	show_nodes(&found);
-
-	delete root;
-}*/
 
